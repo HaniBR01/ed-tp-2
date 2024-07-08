@@ -7,8 +7,8 @@ INCLUDE = ./include
 SRC = ./src
 
 Target = ./bin/main
-Tolls = ${OBJ}/*.o
-HEADER = ${INCLUDE}/clareira.hpp
+Tolls = ${OBJ}/floresta.o ${OBJ}/main.o
+HEADER = ${INCLUDE}/floresta.hpp
 
 #
 
@@ -19,18 +19,14 @@ make all:
 
 #
 
-make run:
-	./bin/main
-
-#
 
 ${Target}: ${Tolls}
-	${CC} ${CFLAGS} -I ${HEADER} -o ${Target}
+	${CC} ${CFLAGS} ${Tolls} -o ${Target}
 
 ${OBJ}/clareira.o: ${INCLUDE}/clareira.hpp ${SRC}/clareira.cpp
 	${CC} ${CFLAGS} -I ${INCLUDE}/clareira.hpp -c ${SRC}/clareira.cpp - o ${OBJ}/clareira.o:
 
-${OBJ}/main.o: ${HEADER} ${INCLUDE}/main.hpp
+${OBJ}/main.o: ${HEADER}
 	${CC} ${CFLAGS} -I ${HEADER} -c ${SRC}/main.cpp - o ${OBJ}/main.o:
 
 clean:
