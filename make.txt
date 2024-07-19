@@ -1,0 +1,44 @@
+CC=g++
+CFLAGS=-std=c++11 -Wall
+
+OBJ = ./obj
+BIN = ./bin
+INCLUDE = ./include
+SRC = ./src
+
+Target = ./bin/main
+Tolls = ${OBJ}/floresta.o ${OBJ}/testheap.o ${OBJ}/heap.o ${OBJ}/main.o
+HEADER = ${INCLUDE}/floresta.hpp ${INCLUDE}/heap.hpp
+
+#
+
+make all:
+	${OBJ}/floresta.o
+	${OBJ}/heap.o
+	${OBJ}/main.o
+	${Target}
+
+#
+
+
+${Target}: ${Tolls}
+	${CC} ${CFLAGS} ${Tolls} -o ${Target}
+
+${OBJ}/floresta.o: ${INCLUDE}/floresta.hpp ${SRC}/floresta.cpp
+	${CC} ${CFLAGS} -I ${INCLUDE}/floresta.hpp -c ${SRC}/floresta.cpp -o ${OBJ}/floresta.o
+
+${OBJ}/heap.o: ${INCLUDE}/heap.hpp ${SRC}/heap.cpp
+	${CC} ${CFLAGS} -I ${INCLUDE}/ -c ${SRC}/heap.cpp -o ${OBJ}/heap.o
+
+${OBJ}/main.o: ${SRC}/main.cpp ${HEADER}
+	${CC} ${CFLAGS} -I ${INCLUDE} -c ${SRC}/main.cpp -o ${OBJ}/main.o
+
+${OBJ}/test.heap.o: ${SRC}/test.heap.cpp ${HEADER}
+	${CC} ${CFLAGS} -I ${INCLUDE} -c ${SRC}/test.heap.cpp -o ${OBJ}/test.heap.o
+
+${BIN}/testheap: ${Tolls}
+	${CC} ${CFLAGS} ${Tolls} -o ${BIN}/testheap
+
+clean:
+	rm -f ${OBJ}/*.o
+	rm -f ${BIN}/*

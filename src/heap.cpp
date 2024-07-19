@@ -12,10 +12,10 @@ Min_heap::~Min_heap(){
     delete Arr;
 }
 
-Min_heap::Insere(TipoItem item){
+void Min_heap::Insere(TipoItem item){
     if(qtd==tamanho){
         TipoItem* l= Arr;
-        Arr = new TipoItem[2*tamanho]
+        Arr = new TipoItem[2*tamanho];
         for(int i=0;i<tamanho;i++){
             Arr[i] = l[i];
         }
@@ -36,8 +36,9 @@ Min_heap::Insere(TipoItem item){
 }
 
 TipoItem Min_heap::RemoveMin(){
+    
     if(qtd==0){
-        returm null;
+        return TipoItem(-1,-1,-1);
     }
     if(qtd == 1){
         qtd--;
@@ -48,6 +49,8 @@ TipoItem Min_heap::RemoveMin(){
     Arr[0] = Arr[qtd-1];
     
     int i=0, s;
+    qtd--;
+
     if(qtd==2){
         s = 1;
     }else if(Arr[1].distancia<Arr[2].distancia){
@@ -60,7 +63,7 @@ TipoItem Min_heap::RemoveMin(){
         TipoItem t = Arr[i];
         Arr[i] = Arr[s];
         Arr[s] = t;
-        if((s*2+1)=>qtd){
+        if((s*2+1)>=qtd){
             break;
         }else if((s*2+2)==qtd){
             i = s; 
@@ -74,6 +77,23 @@ TipoItem Min_heap::RemoveMin(){
         }
 
     }
-    qtd--;
     return min;
+}
+
+void Min_heap::Imprime(){
+    for(int i=0;i<qtd;i++){
+        Arr[i].imprime();
+        cout << " ";
+    }
+    cout << endl;
+}
+
+bool Min_heap::Vazio(){
+    if(qtd==0)
+        return true;
+    return false;
+}
+
+void TipoItem::imprime(){
+    cout << "(" << vertice << "," << portais << "," << distancia << ")";
 }

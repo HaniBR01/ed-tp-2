@@ -9,6 +9,9 @@ struct TipoItem{
     int vertice;
     int portais;
     int distancia;
+    TipoItem():vertice(0),portais(0),distancia(0){}
+    TipoItem(int v,int p,int d):vertice(v),portais(p),distancia(d){}
+    void imprime();
 }typedef TipoItem;
 
 
@@ -26,7 +29,9 @@ class Min_heap{
 
         void Insere(TipoItem item);
         TipoItem RemoveMin();
+        void Imprime();
 
+        bool Vazio();
         void Limpa();
 
 };

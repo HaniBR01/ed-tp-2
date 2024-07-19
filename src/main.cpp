@@ -7,8 +7,7 @@ int main(){
     int clr, tri, por;
     cin >> clr >> tri >> por;
     Floresta F = Floresta(clr,tri,por);
-    F.imprimeClareiras();
-    F.imprimeMatriz();
+    cout << F.dikstra() << endl;
 
     return 0;
 }
