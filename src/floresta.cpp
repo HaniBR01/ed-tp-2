@@ -78,8 +78,9 @@ int Floresta::dikstra(){
     TipoItem atual;
     while (! heap.Vazio()){
         atual = heap.RemoveMin();
-        atual.imprime();
-        cout << endl;
+        if(atual.vertice==(numVertices-1)){
+            return 1;
+        }
         if(!vizitados.vizitado(atual)){
             vizitados.Insere(atual);
             for(int i=0;i<numVertices;i++){
@@ -114,7 +115,7 @@ void Caminho::Insere(TipoItem vertice){
         TipoItem* velho=Vizitados;
         tamanho*=2;
         Vizitados = new TipoItem[tamanho];
-        for(int i;i<quantidade;i++){
+        for(int i=1;i<quantidade;i++){
             Vizitados[i] = velho[i];
         }
         delete velho;
@@ -127,7 +128,7 @@ bool Caminho::vizitado(TipoItem vertice){
     if(quantidade==0){
         return false;
     }
-    for(int i;i<quantidade;i++){
+    for(int i=1;i<quantidade;i++){
         if(vertice.vertice == Vizitados[i].vertice && vertice.portais == Vizitados[i].portais){
             return true;
         }
@@ -139,7 +140,7 @@ bool Caminho::vizitado(int vertice){
     if(quantidade==0){
         return false;
     }
-    for(int i;i<quantidade;i++){
+    for(int i=1;i<quantidade;i++){
         if(Vizitados[i].vertice == vertice){
             return true;
         }
