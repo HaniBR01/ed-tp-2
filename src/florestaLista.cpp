@@ -54,16 +54,19 @@ int FlorestaLista::dijkstra(){
     while (!heap.Vazio()){
         atual = heap.RemoveMin();
         if(atual.vertice==(numVertices-1)){
-            return 1;
+            if(atual.distancia <= energia && atual.portais <= portais)
+                return 1;
+            else
+                return 0;
         }
         listaAdjacencia* current = ClareirasLista[atual.vertice].listaAdj;
         if(!vizitados.vizitado(atual)){
             vizitados.Insere(atual);
             while(current != nullptr){
                 float dist = current->distancia;
-                if(dist >0 && dist + atual.distancia <= energia){
+                if(dist >0){
                     heap.Insere(TipoItem(current->destino,atual.portais,dist + atual.distancia,dist + atual.distancia));
-                }else if(dist == 0 && atual.portais < portais){
+                }else if(dist == 0){
                     heap.Insere(TipoItem(current->destino,atual.portais+1,atual.distancia,dist + atual.distancia));
                 }
                 current = current->proximo;
@@ -86,7 +89,10 @@ int FlorestaLista::estrela(){
     while (!heap.Vazio()){
         atual = heap.RemoveMin();
         if(atual.vertice==(numVertices-1)){
-            return 1;
+            if(atual.distancia <= energia && atual.portais <= portais)
+                return 1;
+            else
+                return 0;
         }
         listaAdjacencia* current = ClareirasLista[atual.vertice].listaAdj;
         if(!vizitados.vizitado(atual)){
@@ -94,9 +100,9 @@ int FlorestaLista::estrela(){
             while(current != nullptr){
                 float dist = current->distancia;
                 float heur = ClareirasLista[current->destino].distancia(ClareirasLista[numVertices-1]);
-                if(dist >0 && dist + atual.distancia <= energia){
+                if(dist >0){
                     heap.Insere(TipoItem(current->destino,atual.portais,dist + atual.distancia,dist + atual.distancia+heur));
-                }else if(dist == 0 && atual.portais < portais){
+                }else if(dist == 0){
                     heap.Insere(TipoItem(current->destino,atual.portais+1,atual.distancia,dist + atual.distancia+heur));
                 }
                 current = current->proximo;

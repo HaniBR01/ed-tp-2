@@ -1,36 +1,42 @@
 #include <iostream>
 #include <fstream>
+#include <cmath>
 #include <random>
 #include <unordered_set>
 
-// Custom hash function for std::pair<int, int>
+using namespace std;
+
+// Custom hash function for pair<int, int>
 struct PairHash {
     template <typename T1, typename T2>
-    std::size_t operator()(const std::pair<T1, T2>& p) const {
-        auto hash1 = std::hash<T1>{}(p.first);
-        auto hash2 = std::hash<T2>{}(p.second);
+    size_t operator()(const pair<T1, T2>& p) const {
+        auto hash1 = hash<T1>{}(p.first);
+        auto hash2 = hash<T2>{}(p.second);
         return hash1 ^ hash2;
     }
 };
 
 int main() {
     // Parâmetros dados
-    int v = 100;  // Número de vértices
-    int t = 300;  // Número de trilhas
-    int p = 30;   // Número de portais
-
+    int v, t, p, u;
+    float s, dificuldade, conectividade;
+    cin >> v >> s >> u >> dificuldade >> conectividade;
+    if(conectividade>1)
+        conectividade=1;
+    t= conectividade*v*(v+1)/2;
+    p=t/10;
     // Abrir arquivo para escrita
-    std::ofstream file("grafo.txt");
+    ofstream file("testeAleatorio.txt");
     if (!file.is_open()) {
-        std::cerr << "Erro ao abrir o arquivo para escrita.\n";
+        cerr << "Erro ao abrir o arquivo para escrita.\n";
         return 1;
     }
 
     // Configuração do gerador de números aleatórios
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_real_distribution<float> vertex_dis(0.0, 100.0);  // Coordenadas de vértices de 0 a 100
-
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_real_distribution<float> vertex_dis(-(s*dificuldade/20), (s*dificuldade/20));  // Coordenadas de vértices de 0 a 100
+    file << v << " " << t << " " << p << "\n";
     // Gerar vértices
     for (int i = 0; i < v; ++i) {
         float x = vertex_dis(gen);
@@ -39,14 +45,14 @@ int main() {
     }
 
     // Gerar trilhas
-    std::uniform_int_distribution<int> vertex_dist(0, v - 1);  // Distribuição para vértices de 0 a v-1
-    std::unordered_set<std::pair<int, int>, PairHash> edges;  // Usar PairHash como o hash
+    uniform_int_distribution<int> vertex_dist(0, v - 1);  // Distribuição para vértices de 0 a v-1
+    unordered_set<pair<int, int>, PairHash> edges;  // Usar PairHash como o hash
 
     while (edges.size() < t) {
         int u = vertex_dist(gen);
         int v = vertex_dist(gen);
         if (u != v) {
-            edges.insert({std::min(u, v), std::max(u, v)});
+            edges.insert({min(u, v), max(u, v)});
         }
     }
 
@@ -60,19 +66,19 @@ int main() {
     while (edges.size() < p) {
         int u = vertex_dist(gen);
         int v = vertex_dist(gen);
-        if (u != v && edges.find({std::min(u, v), std::max(u, v)}) == edges.end() && edges.find({std::max(u, v), std::min(u, v)}) == edges.end()) {
-            edges.insert({std::min(u, v), std::max(u, v)});
+        if (u != v && edges.find({min(u, v), max(u, v)}) == edges.end() && edges.find({max(u, v), min(u, v)}) == edges.end()) {
+            edges.insert({min(u, v), max(u, v)});
         }
     }
 
     for (const auto& edge : edges) {
         file << edge.first << " " << edge.second << "\n";
     }
-
+    file << s << " " << u << "\n";
     // Fechar arquivo
     file.close();
 
-    std::cout << "Arquivo 'grafo.txt' gerado com sucesso!\n";
+    cout << "Arquivo 'grafo.txt' gerado com sucesso!\n";
 
     return 0;
 }
