@@ -71,24 +71,27 @@ void Floresta::imprimeMatriz(){
     cout << endl;
 }
 
-int Floresta::dikstra(){
+int Floresta::dijkstra(){
     Min_heap heap;
     Caminho vizitados;
-    heap.Insere(TipoItem(0,0,0));
+    heap.Insere(TipoItem(0,0,0,0));
     TipoItem atual;
     while (! heap.Vazio()){
         atual = heap.RemoveMin();
         if(atual.vertice==(numVertices-1)){
-            return 1;
+            if(atual.distancia <= energia && atual.portais <= portais)
+                return 1;
+            else
+                return 0;
         }
         if(!vizitados.vizitado(atual)){
             vizitados.Insere(atual);
             for(int i=0;i<numVertices;i++){
                 float dist = MatrizAdjacencia[atual.vertice][i];
-                if(dist >0 && dist + atual.distancia <= energia){
-                    heap.Insere(TipoItem(i,atual.portais,dist + atual.distancia));
-                }else if(dist == 0 && atual.portais < portais){
-                    heap.Insere(TipoItem(i,atual.portais+1,atual.distancia));
+                if(dist >0){
+                    heap.Insere(TipoItem(i,atual.portais,dist + atual.distancia,dist + atual.distancia));
+                }else if(dist == 0){
+                    heap.Insere(TipoItem(i,atual.portais+1,atual.distancia,dist + atual.distancia));
                 }
             }
         }
@@ -101,49 +104,36 @@ int Floresta::dikstra(){
     return 0;
 }
 
-Caminho::Caminho(){
-    tamanho = 8; quantidade=0;
-    Vizitados = new TipoItem[tamanho];
-}
-
-Caminho::~Caminho(){
-    delete Vizitados;
-}
-
-void Caminho::Insere(TipoItem vertice){
-    if(quantidade==tamanho){
-        TipoItem* velho=Vizitados;
-        tamanho*=2;
-        Vizitados = new TipoItem[tamanho];
-        for(int i=1;i<quantidade;i++){
-            Vizitados[i] = velho[i];
+int Floresta::estrela(){
+    Min_heap heap;
+    Caminho vizitados;
+    heap.Insere(TipoItem(0,0,0,0));
+    TipoItem atual;
+    while (! heap.Vazio()){
+        atual = heap.RemoveMin();
+        if(atual.vertice==(numVertices-1)){
+            if(atual.distancia <= energia && atual.portais <= portais)
+                return 1;
+            else
+                return 0;
         }
-        delete velho;
-    }
-    Vizitados[quantidade] = vertice;
-    quantidade++;
-}
-
-bool Caminho::vizitado(TipoItem vertice){
-    if(quantidade==0){
-        return false;
-    }
-    for(int i=1;i<quantidade;i++){
-        if(vertice.vertice == Vizitados[i].vertice && vertice.portais == Vizitados[i].portais){
-            return true;
+        if(!vizitados.vizitado(atual)){
+            vizitados.Insere(atual);
+            for(int i=0;i<numVertices;i++){
+                float dist = MatrizAdjacencia[atual.vertice][i];
+                float heur = Clareiras[i].distancia(Clareiras[numVertices-1]);
+                if(dist >0){
+                    heap.Insere(TipoItem(i,atual.portais,dist + atual.distancia,dist + atual.distancia+heur));
+                }else if(dist == 0){
+                    heap.Insere(TipoItem(i,atual.portais+1,atual.distancia,dist + atual.distancia+heur));
+                }
+            }
         }
     }
-    return false;
-}
-
-bool Caminho::vizitado(int vertice){
-    if(quantidade==0){
-        return false;
+    
+    if(vizitados.vizitado(numVertices-1)){
+        return 1;
     }
-    for(int i=1;i<quantidade;i++){
-        if(Vizitados[i].vertice == vertice){
-            return true;
-        }
-    }
-    return false;
+    
+    return 0;
 }

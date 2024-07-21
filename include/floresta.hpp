@@ -18,16 +18,6 @@ struct Clareira{
     float distancia(Clareira &clr);
 }typedef Clareira;
 
-struct Caminho{
-    int tamanho, quantidade;
-    TipoItem* Vizitados;
-    Caminho();
-    ~Caminho();
-    void Insere(TipoItem vertice);
-    bool vizitado(TipoItem vertice);
-    bool vizitado(int);
-}typedef Caminho;
-
 class Floresta {
     private:
         int numVertices;
@@ -39,7 +29,8 @@ class Floresta {
         void imprimeClareiras();
         void imprimeMatriz();
 
-        int dikstra();
+        int dijkstra();
+        int estrela();
 
         Floresta(int clareiras, int trilhas, int portal);
         ~Floresta();

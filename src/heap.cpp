@@ -1,7 +1,5 @@
 #include "heap.hpp"
 
-
-
 Min_heap::Min_heap(){
     tamanho = 8;
     qtd = 0;
@@ -9,7 +7,7 @@ Min_heap::Min_heap(){
 }
 
 Min_heap::~Min_heap(){
-    delete Arr;
+    delete[] Arr;
 }
 
 void Min_heap::Insere(TipoItem item){
@@ -25,7 +23,7 @@ void Min_heap::Insere(TipoItem item){
     
     Arr[qtd] = item;
     int i = qtd;
-    while(i!=0 && Arr[(i-1)/2].distancia > Arr[i].distancia){
+    while(i!=0 && Arr[(i-1)/2].peso > Arr[i].peso){
         TipoItem t = Arr[i];
         Arr[i] = Arr[(i-1)/2];
         Arr[(i-1)/2] = t;
@@ -38,7 +36,7 @@ void Min_heap::Insere(TipoItem item){
 TipoItem Min_heap::RemoveMin(){
     
     if(qtd==0){
-        return TipoItem(-1,-1,-1);
+        return TipoItem(-1,-1,-1,-1);
     }
     if(qtd == 1){
         qtd--;
@@ -53,13 +51,13 @@ TipoItem Min_heap::RemoveMin(){
 
     if(qtd==2){
         s = 1;
-    }else if(Arr[1].distancia<Arr[2].distancia){
+    }else if(Arr[1].peso<Arr[2].peso){
         s = 1;
     }else{
         s = 2;
     }
 
-    while(Arr[i].distancia>Arr[s].distancia && s<qtd){
+    while(Arr[i].peso>Arr[s].peso && s<qtd){
         TipoItem t = Arr[i];
         Arr[i] = Arr[s];
         Arr[s] = t;
@@ -68,7 +66,7 @@ TipoItem Min_heap::RemoveMin(){
         }else if((s*2+2)==qtd){
             i = s; 
             s=s*2+1;
-        }else if(Arr[s*2+1].distancia<Arr[s*2+2].distancia){
+        }else if(Arr[s*2+1].peso<Arr[s*2+2].peso){
             i=s;
             s = s*2+1;
         }else{
@@ -96,4 +94,51 @@ bool Min_heap::Vazio(){
 
 void TipoItem::imprime(){
     cout << "(" << vertice << "," << portais << "," << distancia << ")";
+}
+
+Caminho::Caminho(){
+    tamanho = 8; quantidade=0;
+    Vizitados = new TipoItem[tamanho];
+}
+
+Caminho::~Caminho(){
+    delete[] Vizitados;
+}
+
+void Caminho::Insere(TipoItem vertice){
+    if(quantidade==tamanho){
+        TipoItem* velho=Vizitados;
+        tamanho*=2;
+        Vizitados = new TipoItem[tamanho];
+        for(int i=1;i<quantidade;i++){
+            Vizitados[i] = velho[i];
+        }
+        delete[] velho;
+    }
+    Vizitados[quantidade] = vertice;
+    quantidade++;
+}
+
+bool Caminho::vizitado(TipoItem vertice){
+    if(quantidade==0){
+        return false;
+    }
+    for(int i=1;i<quantidade;i++){
+        if(vertice.vertice == Vizitados[i].vertice && vertice.portais == Vizitados[i].portais){
+            return true;
+        }
+    }
+    return false;
+}
+
+bool Caminho::vizitado(int vertice){
+    if(quantidade==0){
+        return false;
+    }
+    for(int i=1;i<quantidade;i++){
+        if(Vizitados[i].vertice == vertice){
+            return true;
+        }
+    }
+    return false;
 }
