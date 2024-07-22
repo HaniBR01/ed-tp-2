@@ -1,4 +1,5 @@
 #include "florestaMatriz.hpp"
+#include "excessoes.hpp"
 #include <cmath>
 
 void Clareira::imprime(){
@@ -11,6 +12,15 @@ float Clareira::distancia(Clareira &clr){
 
 florestaMatriz::florestaMatriz(int clareiras, int trilhas, int portal){
     numVertices = clareiras;
+    if(numVertices<=0){
+        throw GrafoVazio();
+    }
+    if(trilhas<0){
+        throw TrilhasNegativas();
+    }
+    if(portal<0){
+        throw PortaisNegativos();
+    }
     Clareiras = new Clareira[clareiras];
     for(int i=0; i<clareiras; i++){
         float x,y;
@@ -43,6 +53,12 @@ florestaMatriz::florestaMatriz(int clareiras, int trilhas, int portal){
     cin >> s >> q;
     energia = s;
     portais = q;
+    if(energia<0){
+        throw EnergiaNegativos();
+    }
+    if(portais<0){
+        throw PortaisNegativos();
+    }
 }
 
 florestaMatriz::~florestaMatriz(){

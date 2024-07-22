@@ -17,7 +17,7 @@ void Min_heap::Insere(TipoItem item){
         for(int i=0;i<tamanho;i++){
             Arr[i] = l[i];
         }
-        delete l;
+        delete[] l;
         tamanho*=2;
     }
     
